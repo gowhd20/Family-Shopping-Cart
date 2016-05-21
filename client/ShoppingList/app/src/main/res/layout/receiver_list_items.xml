@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="32dp"
+    android:orientation="vertical"
+    android:textColor="#dddddd"
+    android:textSize="18dp"
+    android:background="#202020"
+    android:textAlignment="gravity"
+    android:gravity="center"
+    android:id="@+id/receiverListView_item">
+</TextView>

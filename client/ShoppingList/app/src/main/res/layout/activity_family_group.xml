@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    tools:context="com.example.arash.shoppinglist.FamilyGroupActivity"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.80"
+        android:weightSum="1">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/FamilyGroupTitle_TextView"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:textStyle="bold"
+                android:textSize="25dp"
+                android:textColor="#ffffff"
+                android:singleLine="true"
+                android:text="      Family Group"
+                android:textAlignment="gravity"
+                android:gravity="center"
+                android:background="@drawable/shopping_list_title_background_grey"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                />
+
+            <ImageView
+                android:layout_width= "70dp"
+                android:layout_height="60dp"
+                android:adjustViewBounds="true"
+                android:id="@+id/FamilyGroupTitleImage_ImageView"
+                android:src="@drawable/users_grey"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="15dp"
+                android:onClick="ShowFamilyID"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:id="@+id/Name_editText"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/family_group_edit_text_not_join"
+                android:autoText="false"
+                android:hint="Family Name"
+                android:singleLine="true"
+                android:textColorHint="#FFFFFF"
+                android:textAlignment="center"/>
+
+            <ImageView
+                android:layout_width= "25dp"
+                android:layout_height="25dp"
+                android:adjustViewBounds="true"
+                android:id="@+id/FamilyGroupPlus_ImageView"
+                android:src="@drawable/users_icon_white"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="8dp"
+                />
+
+        </RelativeLayout>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:id="@+id/Members_listView"
+            android:layout_gravity="center_horizontal"
+            android:scrollbars="vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:weightSum="1">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width= "150dp"
+                android:layout_height="45dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/family_create_grey"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/AddMember_icon"
+                android:onClick="CreateFamily_button"/>
+
+            <ImageView
+                android:layout_width= "150dp"
+                android:layout_height="45dp"
+                android:adjustViewBounds="true"
+                android:id="@+id/RemoveMember_icon"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/family_join_grey"
+                android:onClick="JoinOrExitFamily"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

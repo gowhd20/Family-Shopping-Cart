@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:weightSum="1"
+    android:background="@drawable/shopping_list_background_normal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.65"
+        android:weightSum="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:orientation="vertical"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:textAlignment="gravity"
+            android:gravity="center_vertical|left"
+            android:id="@+id/ShoppingListItemName_textView"
+            android:paddingLeft="10dp">
+        </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:orientation="vertical"
+            android:textColor="#437ed9"
+            android:textSize="14dp"
+            android:textAlignment="gravity"
+            android:gravity="center_vertical|left"
+            android:id="@+id/ShoppingListItemWhoBuy_textView"
+            android:paddingLeft="10dp"
+            android:layout_marginBottom="5dp">
+        </TextView>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.35"
+        android:weightSum="1"
+        android:gravity="right">
+        <ImageView
+            android:layout_width= "match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/shoppingItemUrgent_icon"
+            android:src="@drawable/urgent_empty"
+            android:adjustViewBounds="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            />
+    </RelativeLayout>
+
+</LinearLayout>
+

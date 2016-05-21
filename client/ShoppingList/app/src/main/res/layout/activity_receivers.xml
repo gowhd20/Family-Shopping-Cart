@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.arash.shoppinglist.Receivers"
+    android:background="#00FFFFFF">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ListView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="55dp"
+            android:layout_marginTop="92dp"
+            android:id="@+id/receivers_listView" />
+        <ImageView
+            android:layout_width= "25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/triangle_black"
+            android:adjustViewBounds="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="95dp"
+            />
+    </RelativeLayout>
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="32dp"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:text="Set"
+        android:textAllCaps="false"
+        android:textColor="#dddddd"
+        android:id="@+id/setReceivers_button"
+        android:onClick="setReceivers"
+        android:background="@android:color/darker_gray"
+        android:layout_marginRight="55dp"
+        android:layout_gravity="right"/>
+
+</LinearLayout>

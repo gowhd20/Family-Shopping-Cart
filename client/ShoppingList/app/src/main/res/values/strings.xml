@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Family Shopping Cart</string>
+    <string name="title_activity_to_whom">toWhom</string>
+    <string name="title_activity_item_details">ItemDetails</string>
+</resources>

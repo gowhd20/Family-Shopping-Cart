@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    tools:context="com.example.arash.shoppinglist.MainActivity">
+
+    <ImageView
+        android:layout_width= "250dp"
+        android:layout_height="250dp"
+        android:scaleType="fitXY"
+        android:id="@+id/ShoppingList_icon"
+        android:src="@drawable/home_page_cart"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="OpenShoppingListPage"
+        android:layout_marginTop="20dp"/>
+
+    <ImageView
+        android:layout_width= "150dp"
+        android:layout_height="150dp"
+        android:scaleType="fitXY"
+        android:id="@+id/FamilyGroup_icon"
+        android:src="@drawable/home_page_group"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:onClick="OpenFamilyGroupPage"/>
+
+    <ImageView
+        android:layout_width= "80dp"
+        android:layout_height="80dp"
+        android:adjustViewBounds="true"
+        android:id="@+id/me_icon"
+        android:src="@drawable/home_page_me"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+        android:onClick="OpenMePage"/>
+</RelativeLayout>
+

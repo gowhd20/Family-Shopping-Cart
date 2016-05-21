@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    tools:context="com.example.arash.shoppinglist.AddItem"
+    android:weightSum="1">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.88"
+        android:weightSum="1">
+
+        <!-- Name -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/itemName_textView"
+                android:layout_marginLeft="15dp"
+                android:background="#FFFFFF"
+                android:textColor="#000000"
+                android:singleLine="true"
+                android:text="Item name: "
+                android:textAlignment="gravity"
+                android:gravity="center"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:id="@+id/itemName_editText"
+                android:layout_marginRight="15dp"
+                android:background="#FFFFFF"
+                android:autoText="false"
+                android:singleLine="true"
+                android:textAlignment="gravity"
+                android:gravity="left"
+                android:textColor="#2e8fef"
+                android:textSize="16dp"
+                android:layout_marginLeft="5dp"
+                android:cursorVisible="false"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@android:color/darker_gray"/>
+
+        <!-- Time of the need -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/time_textView"
+                android:layout_marginLeft="15dp"
+                android:background="#FFFFFF"
+                android:textColor="#000000"
+                android:singleLine="true"
+                android:text="Time of need: "
+                android:textAlignment="gravity"
+                android:gravity="center"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:id="@+id/itemTime_button"
+                    android:text="    "
+                    android:textSize="18dp"
+                    android:textColor="@android:color/white"
+                    android:textAllCaps="false"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/button_simple_grey"
+                    android:onClick="pickTimeOfNeed"
+
+                    />
+            </RelativeLayout>
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@android:color/darker_gray"/>
+
+        <!-- to whom -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/receivers_textView"
+                android:layout_marginLeft="15dp"
+                android:background="#FFFFFF"
+                android:textColor="#000000"
+                android:singleLine="true"
+                android:text="Receivers: "
+                android:textAlignment="gravity"
+                android:gravity="center"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right">
+                <ImageView
+                    android:layout_width= "30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/toWhom_icon"
+                    android:src="@drawable/whom_icon_not_selected"
+                    android:adjustViewBounds="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:onClick="toWhom"
+                    />
+            </RelativeLayout>
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@android:color/darker_gray"/>
+
+        <!-- Urgency -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/itemUrgency_textView"
+                android:layout_marginLeft="15dp"
+                android:background="#FFFFFF"
+                android:textColor="#000000"
+                android:singleLine="true"
+                android:text="Urgent: "
+                android:textAlignment="gravity"
+                android:gravity="center"/>
+            <RelativeLayout
+                android:id="@+id/rlRight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right">
+                <CheckBox
+                    android:id="@+id/itemUrgency_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    />
+            </RelativeLayout>
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@android:color/darker_gray"/>
+
+        <!-- Estimated price -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/itemPrice_textView"
+                android:layout_marginLeft="15dp"
+                android:background="#FFFFFF"
+                android:textColor="#000000"
+                android:singleLine="true"
+                android:text="Estimated price: "
+                android:textAlignment="gravity"
+                android:gravity="center"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:id="@+id/itemPrice_editText"
+                android:layout_marginRight="15dp"
+                android:background="#FFFFFF"
+                android:autoText="false"
+                android:singleLine="true"
+                android:textAlignment="gravity"
+                android:gravity="left"
+                android:textColor="#2e8fef"
+                android:textSize="16dp"
+                android:layout_marginLeft="5dp"
+                android:cursorVisible="false"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@android:color/darker_gray"/>
+
+        <!-- Item Available at -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/itemPlace_textView"
+                android:layout_marginLeft="15dp"
+                android:background="#FFFFFF"
+                android:textColor="#000000"
+                android:singleLine="true"
+                android:text="Available at: "
+                android:textAlignment="gravity"
+                android:gravity="center"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:id="@+id/itemPlace_editText"
+                android:layout_marginRight="15dp"
+                android:background="#FFFFFF"
+                android:autoText="false"
+                android:singleLine="true"
+                android:textAlignment="gravity"
+                android:gravity="left"
+                android:textColor="#2e8fef"
+                android:textSize="16dp"
+                android:layout_marginLeft="5dp"
+                android:cursorVisible="false"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@android:color/darker_gray"/>
+
+        <!-- descriptions -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/itemDescription_textView"
+                android:layout_marginLeft="15dp"
+                android:background="#FFFFFF"
+                android:textColor="#000000"
+                android:singleLine="true"
+                android:text="Description: "
+                android:textAlignment="gravity"
+                android:gravity="center"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:id="@+id/itemDescription_editText"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/black_round_border"
+                android:autoText="false"
+                android:textAlignment="gravity"
+                android:gravity="left"
+                android:textColor="#2e8fef"
+                android:textSize="16dp"
+                android:padding="10dp"
+                android:cursorVisible="false"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.12"
+        android:weightSum="1">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <ImageView
+                android:layout_width= "200dp"
+                android:layout_height="50dp"
+                android:src="@drawable/create_blue"
+                android:adjustViewBounds="true"
+                android:id="@+id/itemAdd_button"
+                android:onClick="addItem"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

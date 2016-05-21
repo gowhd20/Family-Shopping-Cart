@@ -1,0 +1,192 @@
+
+#-------------------------Requests--------------------------------
+
+## register a new request 		method : POST
+/family/<string:family_name>/requests
+{
+	"uuid":<string:uuid>,
+	"sender":
+	{
+		"uid":<string:uid>
+	},
+	"receivers":[
+	{
+		"uid":<string:uid>
+	}],
+	# locality info is optional
+	"locality_info":
+	{
+		"country":"Finland",
+		"locality":"Oulu"
+	},
+    # optional_data is optional
+    "optional_data":[
+    {
+		"price":<string:price>,
+		"time_of_need":<integer:time_of_need>,
+		"description":<string:description>,
+		"location":<string:location>,
+		"urgency":<integer:urgency>
+    }]
+}
+
+## register multiple requests 		method : POST
+/family/<string:family_name>/requests/many
+
+{
+    "uuid":<string:uuid>,
+    "sender":
+    {
+        "uid":<string:uid>
+    },
+    # locality info is optional
+    "locality_info":
+    {
+    	"country":"Finland",
+    	"locality":"Oulu"
+    }
+    "requests":[
+    {
+        "receivers":[
+        {
+            "uid":<string:uid>
+        },
+        {
+            "uid":<string:uid>
+        }],
+        "item":<string:item>,
+        # optional_data is optional
+        "optional_data":[
+        {
+			"price":<string:price>,
+			"time_of_need":<integer:time_of_need>,
+			"description":<string:description>,
+			"location":<string:location>,
+			"urgency":<integer:urgency>
+        }]
+    }]
+}
+
+## update request info		method : PUT
+/family/<string:family_name>/requests
+
+{
+	"req_uuid":<string:req_uuid>,
+	"uuid":<string:uuid>,
+	"data_to_update":
+	{
+		"receivers":[
+		{
+			"uid":<string:uid>
+		}],
+		"commants":[
+		{
+			"user_name":<string:user_name>,
+			"uid":<string:uid>,
+			"comment":<string:comment>
+		}],
+		"acceptors":[
+		{
+			"uid":<string:uid>
+		}],
+		"price":<string:price>,
+		"time_of_need":<integer:time_of_need>,
+		"description":<string:description>,
+		"location":<string:location>,
+		"urgency":<integer:urgency>
+	}
+}
+
+## remove acceptors 	method = PUT
+## Note that you only include 'uid','req_uuid','uuid' when you try to remove the user 
+## from acceptors
+/family/<string:family_name>/requests
+
+{
+	"req_uuid":<string:req_uuid>,
+	"uuid":<string:uuid>,
+	"uid":<string:uid>
+}
+
+## delete one request		method : DELETE
+/family/<string:family_name>/requests/<string:req_uuid>
+
+## get the list of requests		method : GET
+/family/<string:uuid>/requests/all
+
+## get the detail of request 	method : GET
+/family/<string:family_name>/requests/<string:req_uuid>	
+
+
+#------------------------------------------------------------------------
+
+#----------------------Family-----------------------------------------
+
+## create a new family 		method : POST
+/family
+
+{
+	"family_name":<string:family_name>,
+	"user_name":<string:user_name>,
+	"mac_addr":<string:mac_addr>,
+	"google_token":<string:google_token>
+}
+
+## Deprecated
+## add new member 		method : PUT
+/family/<string:family_name>
+
+{
+	"uuid":<string:uuid>,
+	"user_name":<string:user_name>,
+	"mac_addr":<string:mac_addr>,
+	"google_token":<string:google_token>
+}
+
+## get the list of families 	method : GET
+/family
+
+## get detail of the family 	method : GET
+/family/<string:uuid>
+
+#------------------------------------------------------------------
+
+#-------------------------Users-------------------------------------
+
+## get the list of users in the family 		method : GET
+/family/<string:family_name>/users
+
+## get detail of specific user 		method : GET
+/family/<string:family_name>/users/<string:uid>
+
+## get list of details of uesrs in the family 	method : GET
+/family/<string:uuid>/users/all 	
+
+## remove user from the family 		method : DELETE
+/family/<string:family_name>/users/<string:uid>
+
+## add new member to the family 	method : POST
+/family/<string:family_name>/users
+
+{
+	"user_name":<string:user_name>,
+	"mac_addr":<string:mac_addr>,
+	"google_token":<string:google_token>,
+	"uuid":<string:uuid>
+}
+
+#--------------------------------------------------------------------
+
+#-----------------------Comments------------------------------------
+
+## get the list of comments of the specific request 		method : GET
+/family/<string:family_name/requests/<string:req_uuid>/comments
+
+## make a new comment to a request 		method : POST
+/family/<string:family_name>/requests/<string:req_uuid>/comments
+
+{
+	"comment":<string:comment>,
+	"uid":<string:uid>
+}	
+        

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+tools:context="com.example.arash.shoppinglist.DetailsItemActivity"
+android:background="#FFFFFFFF"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="0.8">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="40dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:scaleType="fitStart"
+                android:adjustViewBounds="true"
+                android:src="@drawable/note_stick"/>
+
+            <TextView
+                android:id="@+id/DetailsName_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="20dp"
+                android:textColor="#e61c1c"
+                android:shadowColor="#686565"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="4"
+                android:layout_alignParentTop="true"
+                android:typeface="monospace"
+                android:paddingTop="70dp"
+                android:layout_alignParentLeft="true"
+                android:paddingLeft="70dp"/>
+
+            <TextView
+                android:id="@+id/DetailsWhoAsked_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="12dp"
+                android:shadowColor="#222222"
+                android:layout_alignParentTop="true"
+                android:typeface="monospace"
+                android:paddingTop="110dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                />
+
+            <TextView
+                android:id="@+id/DetailsNeedTime_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="12dp"
+                android:shadowColor="#222222"
+                android:layout_alignParentTop="true"
+                android:typeface="monospace"
+                android:paddingTop="130dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"/>
+
+            <TextView
+                android:id="@+id/DetailsPlace_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="12dp"
+                android:shadowColor="#222222"
+                android:layout_alignParentTop="true"
+                android:typeface="monospace"
+                android:paddingTop="150dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"/>
+
+            <TextView
+                android:id="@+id/DetailsPrice_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="12dp"
+                android:shadowColor="#222222"
+                android:layout_alignParentTop="true"
+                android:typeface="monospace"
+                android:paddingTop="170dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="- Receivers:"
+                android:textSize="12dp"
+                android:shadowColor="#222222"
+                android:layout_alignParentTop="true"
+                android:typeface="monospace"
+                android:paddingTop="195dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"/>
+
+            <TextView
+                android:id="@+id/DetailsReceivers_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="12dp"
+                android:shadowColor="#222222"
+                android:layout_alignParentTop="true"
+                android:typeface="monospace"
+                android:paddingTop="210dp"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="70dp"/>
+
+            <TextView
+                android:id="@+id/DetailsDescriptionTitle_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="- Description:"
+                android:textSize="12dp"
+                android:shadowColor="#222222"
+                android:layout_below="@+id/DetailsReceivers_textView"
+                android:typeface="monospace"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"/>
+
+            <TextView
+                android:id="@+id/DetailsDescription_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="12dp"
+                android:shadowColor="#222222"
+                android:layout_below="@+id/DetailsDescriptionTitle_textView"
+                android:typeface="monospace"
+                android:layout_marginTop="1dp"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="70dp"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="0.2">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width= "160dp"
+                android:layout_height="50dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/item_delete"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="20dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"
+
+                android:onClick="ShoppingListItem_remove"/>
+
+            <ImageView
+                android:layout_width= "160dp"
+                android:layout_height="50dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/i_buy"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:onClick="IWillBuy"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
