@@ -79,7 +79,7 @@ class MongoDB(object):
             ## store _uid and send out uuid for wild use
             self._key_mapper({"secret":new_f.inserted_id, "uuid":uuid})
             f_info = self._find_family_by_id(new_f.inserted_id)
-
+            args['uuid'] = uuid         ## Modified 23/6/2016
             ## register user to the family
             res = self.update_family_member(**args)
             if res == False:
