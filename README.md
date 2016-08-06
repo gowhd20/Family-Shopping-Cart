@@ -28,6 +28,12 @@ or texting which might be confused later with any general conversation.
 	throughout the season or the specific time by leveraging key word based learning algorithm implemented
 	in the server.
 
+# Work-in-progress
+- Taking photo of the item
+
+- Improve user experience in adding family members
+
+- family comments 
 	
 # Tools
 	- Java, Python
