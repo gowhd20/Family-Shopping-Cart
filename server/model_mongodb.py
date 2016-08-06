@@ -13,7 +13,7 @@ from . import weather_api_config
 from pprint import pprint   # for debugging
 
 ## for caching weather data
-from werkzeug.contrib.cache import GAEMemcachedCache
+from werkzeug.contrib.cache import SimpleCache ## modified 24/06/2016 while migration
 
 try:
     from flask.ext.restful import Resource, Api, reqparse
@@ -32,7 +32,7 @@ import requests
 
 logger = api.__get_logger("model_mongodb")
 
-cache = GAEMemcachedCache()
+cache = SimpleCache()
 
 ## @Note, __method won't be able to be called within the class
 class MongoDB(object):
@@ -42,9 +42,9 @@ class MongoDB(object):
         "receivers", "acceptors"])
 
     def __init__(self):
-        client = MongoClient(db_config.MONGO_URI_CUSTOM)
-
-        self.db = client.db_config.MONGO_CLIENT_NAME
+        client = MongoClient(db_config.MONGO_URI_CUSTOM, db_config.PORT)
+        self.db = client['ms']
+        self.db.authenticate(db_config.USERNAME, db_config.PASSWORD)
         self.weather_api_key = weather_api_config.API_KEY
         self.weather_url_config = weather_api_config.config_url
         self.gcm_api_key = gcm_config.API_KEY
@@ -159,8 +159,10 @@ class MongoDB(object):
                     req_uuid = api.uuid_generator_4()
                     opt_data = args['optional_data'] if args['optional_data'] is not None else {"default":"no_data_given"}
                     receivers = args['receivers'][0]
-                    logger.info(args['receivers'][0])
 
+                    ## TODO: store image file name into database
+                    ## TODO: generate name of the image relate to family name, requestor id, item name
+                     
                     new_r = self.db.requests.insert_one(
                         {
                             "created_at":api.get_unix_from_datetime(api.get_current_time()),

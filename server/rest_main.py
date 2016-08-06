@@ -5,9 +5,11 @@
 import config
 import logging as logger
 import json
+import os
 
 from exceptions import RequestException
-from flask import Blueprint, Flask, redirect, request, Response, url_for
+from flask_restful import Resource, Api, reqparse
+from flask import Blueprint, Flask, redirect, request, url_for, Response
 
 from .dataBlocks.comments import CommentsDataBlock, CommentsIndex
 from .dataBlocks.requests_item import RequestsAuth2DataBlock, RequestsAuth1DataBlock, RequestsIndex, RequestManyAuthDataBlock
@@ -15,19 +17,10 @@ from .dataBlocks.family import FamilyDataBlock, FamilyIndex
 from .dataBlocks.base import BaseURIs
 from .dataBlocks.users import UsersAuth2DataBlock, UsersAuth1DataBlock, UsersIndex
 
-try:
-    from flask.ext.restful import Resource, Api, reqparse
-except:
-    from flask_restful import Resource, Api, reqparse
-
-try:
-    from flask_restful import Resource, Api, reqparse
-    # support local usage without installed package
-except:
-    from flask.ext.cors import cross_origin
-    # this is how you would normally import
+#from flask_restful import Resource, Api, reqparse
 
 ms = Blueprint('ms', __name__)
+photo_storage_path = "/var/www/html/Family-Shopping-Cart/server/photo_data_testing/"
 
 from model_mongodb import MongoDB
 
@@ -36,36 +29,30 @@ class DataBlock(Resource, MongoDB):
 
         self.reqparse_post = reqparse.RequestParser(bundle_errors=True)
 
-        self.reqparse_post.add_argument('uuid', 
+        self.reqparse_post.add_argument('photo', 
             type=str, 
             required=True, 
             location='json', 
             help="missing uuid")
 
-        self.reqparse_post.add_argument('sender', 
-            type=dict, 
-            required=True, 
-            location='json', 
-            help="missing sender")
-
-        self.reqparse_post.add_argument('requests', 
-            type=list, 
-            required=True, 
-            location='json', 
-            help="missing requests")
-
         super(DataBlock, self).__init__()
 
-    def post(self, arg):
-        args = self.reqparse_post.parse_args()
-        args['family_name'] = arg
-        res = self.create_requests(**args)
-        #raise RequestException("what exception?")
-        return str(res), 200
+    def get(self):
+        with os.fdopen(os.open(photo_storage_path+"newfileGet.txt", 
+                os.O_RDWR|os.O_CREAT),'w+') as outfile:
+            rdata = outfile.read()
+            outfile.close()
+            return rdata, 200
+        return 200
 
-    def get(self, arg):
-        res = self._convert_id_to_humanreadable("tellus","5f6ebdac-f368-40e8-a7cf-4ff929591afe")
-        return res
+    def post(self):
+        args = self.reqparse_post.parse_args()
+        
+        with os.fdopen(os.open(photo_storage_path+"newfileGet.txt", 
+                os.O_RDWR|os.O_CREAT),'w+') as outfile:
+            outfile.write(args['photo'])
+            outfile.close()
+        return 200
 
 
 
@@ -152,7 +139,7 @@ def init_restful():
     # [END RequestsIndex, handled methods : GET]
 
 
-    api.add_resource(DataBlock, '/test/<string:arg>',methods=['POST', 'GET'],endpoint='/test/family_name')
+    api.add_resource(DataBlock, '/test/request/photo',methods=['POST', 'GET'],endpoint='/test/request/photo')
 
 
     ## index of the api
@@ -160,59 +147,3 @@ def init_restful():
 
     return api
 
-#api.add_resource(DataBlock2, '/family/<string:name>')
-
-
-
-"""
-@ms.route('/help', methods=['GET'])
-def hi():
-    logger.info("hi man2")
-    return "data"
-
-@ms.route('/create/<title>', methods=['GET'])
-def create(title):
-    logger.info("hi man3")
-    result = get_model().create({"title":title})
-
-    return str(result)
-
-
-@ms.route('/find/<item>', methods=['GET'])
-def find_by_name(item):
-    logger.info("haejong test1 was called")
-    return get_model().find_one(item)
-
-
-@ms.route('/count', methods=['GET'])
-def test3():
-    return render_template("call.html")"""
-
-
-"""
-errors = {
-    'UserAlreadyExistsError': {
-        'message': "A user with that username already exists.",
-        'status': 409,
-    },
-    'ResourceDoesNotExist': {
-        'message': "A resource with that ID no longer exists.",
-        'status': 410,
-        'extra': "Any extra information you want.",
-    },
-}
-
-app = Flask(__name__)
-api = flask_restful.Api(app, errors=errors)
-"""
-
-
-"""
-for mem in f_info['members']:
-    user = self.find_user_by_id(mem['user_id'])
-    resp['family'].append(
-        {
-            "family_name":user['family_name'],
-            "mac_addr":user['mac_addr'],
-            "google_token":user['google_token']
-        })"""
