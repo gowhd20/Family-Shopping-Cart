@@ -37,7 +37,13 @@ or texting which might be confused later with any general conversation.
 	
 # Tools
 	- Java, Python
-	
+
+# Bug-fix report
+08/08/2016
+1. 12:05, in model_mongodb.py, GCM requests are disabled while server updates, and will stay until needed later 
+2. 12:37, in requests_item.py, reqparse type for 'optional_data' was modified from 'dict' to 'list'
+3. 12:40, in requests_item.py 'RequestsIndex', indicated data info of sender was modified from 'google_token' to 'uid'	
+
 # Video Demo
 https://youtu.be/5HEmZdVGkuE
 	

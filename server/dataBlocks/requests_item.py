@@ -267,11 +267,11 @@ class RequestsIndex(Resource):
                     "item":"<string:item>",
                     "sender":
                     {
-                        "google_token":"<string:google_token>"
+                        "uid":"<string:uid>"
                     },
                     "receivers":[
                     {
-                        "google_token":"<string:google_token>"
+                        "uid":"<string:uid>"
                     }],
                     "uuid":"<string:uuid>"
                 }

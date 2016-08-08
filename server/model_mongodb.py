@@ -63,7 +63,7 @@ class MongoDB(object):
         else:
             ## uuid is for wild environment use
             uuid = api.uuid_generator_4()  
-
+            
             new_f = self.db.family.insert_one(
             ## creation time will base on local time of where the server is seated
             ## store as epoch/unix time
@@ -157,9 +157,12 @@ class MongoDB(object):
 
                 else:
                     req_uuid = api.uuid_generator_4()
+                    logger.info(args)
                     opt_data = args['optional_data'] if args['optional_data'] is not None else {"default":"no_data_given"}
                     receivers = args['receivers'][0]
-
+                    logger.info(opt_data)
+                    #images = opt_data['images'][0]
+                    #logger.info(images)
                     ## TODO: store image file name into database
                     ## TODO: generate name of the image relate to family name, requestor id, item name
                      
@@ -170,6 +173,7 @@ class MongoDB(object):
                             "owner":f_info['family_name'],
                             "item":args['item'],
                             "sender":args['sender'],
+                            #"images":images,# if 'images' in opt_data else None,
                             "time_of_need":opt_data['time_of_need'] if 'time_of_need' in opt_data else None,
                             "urgency":opt_data['urgency'] if 'urgency' in opt_data else 0,
                             "location":opt_data['location'] if 'location' in opt_data else None,
@@ -177,7 +181,7 @@ class MongoDB(object):
                             "description":opt_data['description'] if 'description' in opt_data else None,
                             "comments":[],
                             "acceptors":[],
-                            "receivers":receivers    # [{"uid":sender1}, {"uid":sender2}, ...]}
+                            "receivers":receivers    # [{"uid":receiver1}, {"uid":receiver2}, ...]}
                         })
 
                     if new_r.inserted_id != None:
@@ -209,8 +213,8 @@ class MongoDB(object):
                             
                             tks = self._find_google_token_by_uid(receivers)
 
-                            if tks is not None:
-                                self._make_gcm_request(tks, data=data)
+                            #if tks is not None:
+                            #    self._make_gcm_request(tks, data=data)
 
                             loc = args['locality_info']
                             if loc is not None:
@@ -311,6 +315,7 @@ class MongoDB(object):
                     if 'optional_data' in req:
                         opt_data = req['optional_data']
                         req['optional_data'] = None
+                        req['images'] = None if not 'images' in opt_data else opt_data['images']
                         req['time_of_need'] = None if not 'time_of_need' in opt_data else opt_data['time_of_need']
                         req['urgency'] = 0 if not 'urgency' in opt_data else opt_data['urgency']
                         req['location'] = None if not 'location' in opt_data else opt_data['location']
@@ -352,13 +357,13 @@ class MongoDB(object):
 
                     tks = self._find_google_token_by_uid(req['receivers'])
 
-                    if tks is not None:
+                    """if tks is not None:
                         ## send gcm messages to receivers
                         self._make_gcm_request(tks, data={
                                 "status":201,
                                 "method":"POST",
                                 "target":"requests"
-                            })
+                            })"""
                   
                     ## fetch and store weather data if possible
                     loc = args['locality_info']
@@ -414,7 +419,9 @@ class MongoDB(object):
     def find_all_requests(self, uuid):
         f_id = self.__get_secure_id(uuid)
         logger.info(f_id)
-
+        test = self.db.requests.find({"owner":"nalikkari3"})
+        for e in test:
+            logger.info(e)
         if f_id != None:
             f_info = self._find_family_by_id(f_id)
 
@@ -423,6 +430,7 @@ class MongoDB(object):
                     "req_uuid":r['req_uuid'],
                     "owner":r['owner'],
                     "item":r['item'],
+                    "images":r['images'],
                     "sender":r['sender'],
                     "time_of_need":r['time_of_need'],
                     "urgency":r['urgency'],
@@ -443,7 +451,7 @@ class MongoDB(object):
                 "status":404,
                 "errorMsg":"uuid not exist",
                 "help":"this call requires family id. If you have one already, "+
-                "you may want to try /family/<string:uuid>/requires"
+                "you may want to try /family/<string:uuid>/request"
             }
     # [END find all requests]
 

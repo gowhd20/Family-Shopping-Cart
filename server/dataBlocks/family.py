@@ -53,16 +53,15 @@ class FamilyDataBlock(Resource, MongoDB):
         res = self.find_family_by_uuid(arg)
         logger.info(res)
 
-        if 'errorMsg' in res:
-            return res, 404
-
-        elif res == None:
+        if res == None:
             return {
                     "action":"GET",
                     "status":"error",
                     "errorMsg":"family name/uuid not exists",
                     "inner_action":"FIND"
                 }, 404
+        elif 'errorMsg' in res:
+            return res, 404
 
         else:
             return {

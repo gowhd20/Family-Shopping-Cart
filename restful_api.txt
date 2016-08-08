@@ -5,6 +5,7 @@
 /family/<string:family_name>/requests
 {
 	"uuid":<string:uuid>,
+	"item":<string:item>,
 	"sender":
 	{
 		"uid":<string:uid>
@@ -20,14 +21,15 @@
 		"locality":"Oulu"
 	},
     # optional_data is optional
-    "optional_data":[
+    "optional_data":			## update 08/08/2016, modified type "optional_data" list to dict
     {
 		"price":<string:price>,
 		"time_of_need":<integer:time_of_need>,
 		"description":<string:description>,
 		"location":<string:location>,
 		"urgency":<integer:urgency>
-    }]
+		"images":[<string:image_raw>]
+    }
 }
 
 ## register multiple requests 		method : POST
@@ -56,14 +58,14 @@
         }],
         "item":<string:item>,
         # optional_data is optional
-        "optional_data":[
+        "optional_data":		## update 08/08/2016, modified type "optional_data" list to dict
         {
-			"price":<string:price>,
-			"time_of_need":<integer:time_of_need>,
-			"description":<string:description>,
-			"location":<string:location>,
-			"urgency":<integer:urgency>
-        }]
+		"price":<string:price>,
+		"time_of_need":<integer:time_of_need>,
+		"description":<string:description>,
+		"location":<string:location>,
+		"urgency":<integer:urgency>
+        }
     }]
 }
 
