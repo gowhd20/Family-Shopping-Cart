@@ -39,16 +39,16 @@ or texting which might be confused later with any general conversation.
 	- Java, Python
 
 # Bug-fix Report
-- 08/08/2016
+08/08/2016
 1. 12:05, in model_mongodb.py, GCM requests are disabled while server updates, and will stay until needed later 
 2. 12:37, in requests_item.py, reqparse type for 'optional_data' was modified from 'dict' to 'list'
 3. 12:40, in requests_item.py 'RequestsIndex', indicated data info of sender was modified from 'google_token' to 'uid'	
 
-- 09/08/2016
-1. ~13:17, in model_mongodb.py, writing image files implemented also in relation, 
+09/08/2016
+1. 13:17, in model_mongodb.py, writing image files implemented also in relation, 
 new database referring code "mongo_meta.py" was added
-2. ~13:17, in model_mongodb.py, some public functions are moved to api.py
-3. 
+2. 13:17, in model_mongodb.py, some public functions are moved to api.py
+3. 18:10, completed testing on image writing, adding, and updating 
 
 # Video Demo
 https://youtu.be/5HEmZdVGkuE
