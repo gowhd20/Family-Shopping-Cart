@@ -98,13 +98,13 @@ class RequestsAuth2DataBlock(Resource, MongoDB):
             }
 
             for req in reqs:
-                logger.info(req)
                 resp['requests'].append(
                     {
                         "created_at":None if not 'created_at' in req else req['created_at'],
                         "req_uuid":None if not 'req_uuid' in req else str(req['req_uuid']),
                         "owner":None if not 'owner' in req else req['owner'],
                         "item":None if not 'item' in req else req['item'],
+                        "images":None if not 'images' in req else req['images'],
                         "sender":None if not 'sender' in req else req['sender'],
                         "time_of_need":None if not 'time_of_need' in req else req['time_of_need'],
                         "urgency":None if not 'urgency' in req else req['urgency'],
@@ -158,6 +158,7 @@ class RequestsAuth1DataBlock(Resource, MongoDB):
                 "req_uuid":None if not 'req_uuid' in res else str(res['req_uuid']),
                 "owner":None if not 'owner' in res else res['owner'],
                 "item":None if not 'item' in res else res['item'],
+                "images":None if not 'images' in res else res['images'],
                 "sender":None if not 'sender' in res else res['sender'],
                 "time_of_need":None if not 'time_of_need' in res else res['time_of_need'],
                 "urgency":None if not 'urgency' in res else res['urgency'],

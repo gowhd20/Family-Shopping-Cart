@@ -852,16 +852,26 @@ class MongoDB(object):
                     data_to_update = {}
 
                     for key in res:
+                        ##  if key is provided to update, add of data into 'data_to_update'
                         if key in keys_to_update:
-                            data_to_update[key] = n_data[key]
+                            ## new images are given to update into the server
+                            if key == 'images':
+                                loimages = self.meta.store_metadata_image(
+                                    f_info['family_name'], n_data['images'])
+
+                                #   write image file in the server storage (NOTE!, this is not the database storage)
+                                api.write_image_file(loimages)
+                                data_to_update[key] = map(lambda x:x['id'], loimages)+res[key]
+                            ## other than new images 
+                            else:
+                                data_to_update[key] = n_data[key]
+                        ##  else, add already existing in database 
                         else:
                             data_to_update[key] = res[key]
 
-                    logger.info(data_to_update)
-
                     ## when update acceptors it should be type of dict, NOT LIST!!
                     ## if a new acceptor has added, system will inform sender 
-                    resp = self._update_one_requests(data_to_update)
+                    resp = self._update_one_request(data_to_update)
                     if not 'errorMsg' in resp and 'acceptors' in keys_to_update:
                         gt = self._find_google_token_by_uid(res['sender'])   # {"sender":{"uid":"senrder_uid"}}
 
@@ -913,7 +923,7 @@ class MongoDB(object):
         }
 
 
-    def _update_one_requests(self, n_data):
+    def _update_one_request(self, n_data):
         ## bracket needs to be controled accordingly to $each syntax
         logger.info(n_data)
         if type(n_data['receivers']) == list and not None:
@@ -951,7 +961,8 @@ class MongoDB(object):
                     "description":n_data['description'],
                     "time_of_need":n_data['time_of_need'],
                     "location":n_data['location'],
-                    "price":n_data['price']
+                    "price":n_data['price'],
+                    "images":n_data['images']
                 },
                 "$addToSet":
                 {

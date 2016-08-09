@@ -28,7 +28,7 @@
 		"description":<string:description>,
 		"location":<string:location>,
 		"urgency":<integer:urgency>,
-		"images":[<string:image_raw>]
+		"images":[<string:image>]
     }
 }
 
@@ -64,7 +64,8 @@
 		"time_of_need":<integer:time_of_need>,
 		"description":<string:description>,
 		"location":<string:location>,
-		"urgency":<integer:urgency>
+		"urgency":<integer:urgency>,
+		"images":[<string:image>]
         }
     }]
 }
@@ -75,6 +76,7 @@
 {
 	"req_uuid":<string:req_uuid>,
 	"uuid":<string:uuid>,
+	# date_to_update is optional
 	"data_to_update":
 	{
 		"receivers":[
@@ -95,7 +97,8 @@
 		"time_of_need":<integer:time_of_need>,
 		"description":<string:description>,
 		"location":<string:location>,
-		"urgency":<integer:urgency>
+		"urgency":<integer:urgency>,
+		"images":[<string:image>]
 	}
 }
 

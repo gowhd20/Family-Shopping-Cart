@@ -46,8 +46,9 @@ or texting which might be confused later with any general conversation.
 
 - 09/08/2016
 1. ~13:17, in model_mongodb.py, writing image files implemented also in relation, 
-new database referring code "mongo_meta.py" added
+new database referring code "mongo_meta.py" was added
 2. ~13:17, in model_mongodb.py, some public functions are moved to api.py
+3. 
 
 # Video Demo
 https://youtu.be/5HEmZdVGkuE
