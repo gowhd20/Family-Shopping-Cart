@@ -44,6 +44,11 @@ or texting which might be confused later with any general conversation.
 2. 12:37, in requests_item.py, reqparse type for 'optional_data' was modified from 'dict' to 'list'
 3. 12:40, in requests_item.py 'RequestsIndex', indicated data info of sender was modified from 'google_token' to 'uid'	
 
+- 09/08/2016
+1. ~13:17, in model_mongodb.py, writing image files implemented also in relation, 
+new database referring code "mongo_meta.py" added
+2. ~13:17, in model_mongodb.py, some public functions are moved to api.py
+
 # Video Demo
 https://youtu.be/5HEmZdVGkuE
 	

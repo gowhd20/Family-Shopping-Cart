@@ -9,6 +9,7 @@ import base64
 import logging
 import calendar, datetime, time
 import pytz
+import os
 
 from pytz import timezone
 #from Crypto.Hash import SHA
@@ -190,3 +191,56 @@ def get_unix_from_datetime(dt):
     return calendar.timegm(dt.timetuple())
 
 ## [END] apis not allowed to override 
+
+
+from uuid import UUID
+from bson.objectid import ObjectId
+
+
+# [START global functions]
+def _id(id):
+    if not isinstance(id, ObjectId):
+        return ObjectId(id)
+    return id
+
+
+def is_id(id):
+    if not isinstance(id, ObjectId):
+        return False
+    else:
+        return True
+
+
+def _uuid(uuid):
+    if not isinstance(uuid, UUID):
+        return uuid_to_obj(uuid)
+    return uuid
+
+
+def _get_retry_after(response_headers):
+    retry_after = response_headers.get('Retry-After')
+
+    if retry_after:
+        # Parse from seconds (e.g. Retry-After: 120)
+        if type(retry_after) is int:
+            return retry_after
+        # Parse from HTTP-Date (e.g. Retry-After: Fri, 31 Dec 1999 23:59:59 GMT)
+        else:
+            try:
+                from email.utils import parsedate
+                from calendar import timegm
+                return timegm(parsedate(retry_after))
+            except (TypeError, OverflowError, ValueError):
+                return None
+
+    return None
+#"/var/www/html/Family-Shopping-Cart/server/photo_data_testing/"
+photo_storage_path = "C:/Users/haejong/Desktop/Family-Shopping-Cart/server/" 
+def write_image_file(loimages):
+    print loimages
+    for image in loimages:       
+        with os.fdopen(os.open(photo_storage_path+image['id'], 
+                os.O_RDWR|os.O_CREAT),'w+') as outfile:
+            outfile.write(image['rdata'])
+            outfile.close()
+# [END global functions]

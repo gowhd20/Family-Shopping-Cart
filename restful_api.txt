@@ -27,7 +27,7 @@
 		"time_of_need":<integer:time_of_need>,
 		"description":<string:description>,
 		"location":<string:location>,
-		"urgency":<integer:urgency>
+		"urgency":<integer:urgency>,
 		"images":[<string:image_raw>]
     }
 }

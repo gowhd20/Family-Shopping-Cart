@@ -3,9 +3,7 @@
 ####################################
 
 from . import db_config
-from bson.objectid import ObjectId
 from .api import api
-from uuid import UUID
 from gcm import GCM
 from . import gcm_config
 from . import weather_api_config
@@ -15,10 +13,7 @@ from pprint import pprint   # for debugging
 ## for caching weather data
 from werkzeug.contrib.cache import SimpleCache ## modified 24/06/2016 while migration
 
-try:
-    from flask.ext.restful import Resource, Api, reqparse
-except:
-    from flask_restful import Resource, Api, reqparse
+from flask_restful import Resource, Api, reqparse
 #from pymongo import ReturnDocument
 try:
     from pymongo import PyMongo, MongoClient
@@ -51,6 +46,8 @@ class MongoDB(object):
         ## make a new request only more than 10 mins passed after the last request
         self.timeframe_allows_requests = 10*60*1
 
+        from .mongo_meta import MongoMetaData
+        self.meta = MongoMetaData(self.db)
 
     # [START create a new family]
     def create_family(self, **args):
@@ -157,14 +154,12 @@ class MongoDB(object):
 
                 else:
                     req_uuid = api.uuid_generator_4()
-                    logger.info(args)
                     opt_data = args['optional_data'] if args['optional_data'] is not None else {"default":"no_data_given"}
                     receivers = args['receivers'][0]
-                    logger.info(opt_data)
-                    #images = opt_data['images'][0]
-                    #logger.info(images)
-                    ## TODO: store image file name into database
-                    ## TODO: generate name of the image relate to family name, requestor id, item name
+
+                    if 'images' in opt_data:
+                        loimages = self.meta.store_metadata_image(
+                            f_info['family_name'], opt_data['images'])
                      
                     new_r = self.db.requests.insert_one(
                         {
@@ -173,7 +168,7 @@ class MongoDB(object):
                             "owner":f_info['family_name'],
                             "item":args['item'],
                             "sender":args['sender'],
-                            #"images":images,# if 'images' in opt_data else None,
+                            "images":map(lambda x:x['id'], loimages) if 'images' in opt_data else None,     ##  store ids generated above
                             "time_of_need":opt_data['time_of_need'] if 'time_of_need' in opt_data else None,
                             "urgency":opt_data['urgency'] if 'urgency' in opt_data else 0,
                             "location":opt_data['location'] if 'location' in opt_data else None,
@@ -186,6 +181,8 @@ class MongoDB(object):
 
                     if new_r.inserted_id != None:
                         self._key_mapper({"secret":new_r.inserted_id, "uuid":req_uuid})
+
+                        api.write_image_file(loimages)
 
                         ## register to family document
                         res = self._register_new_request(new_r.inserted_id, f_id)
@@ -266,7 +263,6 @@ class MongoDB(object):
     # [START create many collection of requests]
     def create_many_requests(self, **args):
         f_id = self.__get_secure_id(args['uuid'])
-        logger.info(f_id)
 
         if f_id == None:
             return {
@@ -297,7 +293,8 @@ class MongoDB(object):
                 requests = args['requests']     ## list of request
                 r_ids = []
                 items = []
-
+                
+                ##  'for' number of requests register together
                 for req in requests:
                     req['created_at'] = api.get_unix_from_datetime(api.get_current_time())
                     req['req_uuid'] = api.uuid_generator_4()
@@ -312,16 +309,28 @@ class MongoDB(object):
                     req['sender'] = args['sender']
                     req['owner'] = f_info['family_name']
 
+
+
                     if 'optional_data' in req:
                         opt_data = req['optional_data']
-                        req['optional_data'] = None
-                        req['images'] = None if not 'images' in opt_data else opt_data['images']
+                        req['optional_data'] = None         # this variable not needed anymore
+
+                        #   if images exist in a request, store them also separately 
+                        if 'images' in opt_data:
+                            loimages = self.meta.store_metadata_image(
+                                f_info['family_name'], opt_data['images'])
+
+                            #   write image file in the server storage (NOTE!, this is not the database storage)
+                            api.write_image_file(loimages)
+
+                            req['images'] = None if not 'images' in opt_data else map(lambda x:x['id'], loimages)
+
                         req['time_of_need'] = None if not 'time_of_need' in opt_data else opt_data['time_of_need']
                         req['urgency'] = 0 if not 'urgency' in opt_data else opt_data['urgency']
                         req['location'] = None if not 'location' in opt_data else opt_data['location']
                         req['description'] = None if not 'description' in opt_data else opt_data['description']
                         req['price'] = None if not 'price' in opt_data else opt_data['price']
-
+                
                 n_ids = self.db.requests.insert_many(requests, ordered=True).inserted_ids
                 
                 ids = []
@@ -330,8 +339,7 @@ class MongoDB(object):
                         {
                             "req_id":n_ids[c]
                         })
-                del c
-                logger.info(ids)
+
                 res = self._register_many_requests(ids, f_id)
 
                 if 'errorMsg' in res:
@@ -378,8 +386,7 @@ class MongoDB(object):
                                         "req_uuid":r_ids,
                                         "weather_record":wt_data
                                     })
-                                r = self.db.weatherRecord.find_one({"_id":_id(id)})
-                                logger.info(r)
+                                r = self.db.weatherRecord.find_one({"_id":api._id(id)})
                             else:
                                 pass
 
@@ -419,9 +426,7 @@ class MongoDB(object):
     def find_all_requests(self, uuid):
         f_id = self.__get_secure_id(uuid)
         logger.info(f_id)
-        test = self.db.requests.find({"owner":"nalikkari3"})
-        for e in test:
-            logger.info(e)
+
         if f_id != None:
             f_info = self._find_family_by_id(f_id)
 
@@ -460,7 +465,7 @@ class MongoDB(object):
     def find_all_members(self, arg):
         ## checking if arg is family_name or uuid
 
-        _arg = _uuid(arg)
+        _arg = api._uuid(arg)
         if _arg is None:
             return map(lambda m:{
                 "user_name":m['user_name'],
@@ -505,7 +510,7 @@ class MongoDB(object):
 
     # [START find family info by uuid]
     def find_family_by_uuid(self, uuid):
-        uuid = _uuid(uuid)
+        uuid = api._uuid(uuid)
 
         if uuid is None:
             return {
@@ -529,7 +534,7 @@ class MongoDB(object):
 
     # [START find family cart by uuid]
     def find_cart_by_uuid(self, uuid):
-        f_id = self.__get_secure_id(_uuid(uuid))
+        f_id = self.__get_secure_id(api._uuid(uuid))
 
         if f_id != None:
             c_info = self._find_cart_by_id(self._find_family_by_id(f_id)['cart_id'])
@@ -583,7 +588,7 @@ class MongoDB(object):
 
         else:
             res = self.db.requests.find_one({
-                    "_id":_id(req_id)
+                    "_id":api._id(req_id)
                 })
             #logger.info(res)
 
@@ -621,7 +626,7 @@ class MongoDB(object):
 
         else:
             r_info = self.db.requests.find_one({
-                    "_id":_id(req_id)
+                    "_id":api._id(req_id)
                 })
 
             # authentication meets
@@ -655,7 +660,7 @@ class MongoDB(object):
     # [START leave family]
     def unregister_from_family(self, f_name, uid):
         ## @Note, uid = user's uuid, userid = user's ObjectId
-        userid = self.__get_secure_id(_uuid(uid))    
+        userid = self.__get_secure_id(api._uuid(uid))    
 
         if userid == None:
             return {
@@ -748,7 +753,7 @@ class MongoDB(object):
             f_info = self._find_family_by_name(args['family_name'])
             logger.info(f_info)
 
-            if _uuid(args['uuid']) != f_info['uuid']:
+            if api._uuid(args['uuid']) != f_info['uuid']:
                 return {
                     "action":"POST",        # PUT used /family/family_name is deprecated 
                     "inner_action":"CHECK",
@@ -765,6 +770,8 @@ class MongoDB(object):
                         }
                 res = self._create_user(**_args)
 
+                if not api.is_id(res):
+                    return res
                 if not isinstance(res, ObjectId):
                     return res
 
@@ -773,7 +780,7 @@ class MongoDB(object):
                     logger.info(u_info)
                     res = self.db.family.update_one(
                     {
-                        "_id":_id(f_info['_id'])
+                        "_id":api._id(f_info['_id'])
                     },
                     {
                         "$push":
@@ -881,7 +888,7 @@ class MongoDB(object):
     def _remove_user_from_acceptors(self, data):
         res = self.db.requests.update_one(
             {
-                "_id":_id(data['_id'])
+                "_id":api._id(data['_id'])
             },
             {
                  "$pull":
@@ -934,7 +941,7 @@ class MongoDB(object):
 
         res = self.db.requests.update(
             {
-                "_id":_id(n_data['_id'])
+                "_id":api._id(n_data['_id'])
             },
             {
                 "$set":
@@ -1002,7 +1009,7 @@ class MongoDB(object):
     def _check_family_has_member(self, id):
         res = self.db.family.find_one(
             {
-                "_id":_id(id)
+                "_id":api._id(id)
             })
         logger.info(res)
         logger.info(len(res['members']))
@@ -1022,7 +1029,7 @@ class MongoDB(object):
     def _check_request_exist(self, id):
         return True if self.db.requests.find_one(
             {
-                "_id":_id(id)
+                "_id":api._id(id)
             }) != None else None
 
 
@@ -1082,7 +1089,7 @@ class MongoDB(object):
     def _find_family_by_id(self, id):
         return self.db.family.find_one(
             {
-                "_id":_id(id)
+                "_id":api._id(id)
             })
 
 
@@ -1105,7 +1112,7 @@ class MongoDB(object):
                 {
                     "members":
                     {
-                        "user_id":_id(u_id)
+                        "user_id":api._id(u_id)
                     }
                 })
 
@@ -1118,7 +1125,7 @@ class MongoDB(object):
                 {
                     "$in":[
                     {
-                        "user_id":_id(id)
+                        "user_id":api._id(id)
                     }]
                 }
             })
@@ -1129,7 +1136,7 @@ class MongoDB(object):
         if not isinstance(uids, list):
             uids = [uids]
 
-        uids = list({"uid":_uuid(uids[idx]['uid'])} for idx,dic in enumerate(uids) if 'uid' in dic)
+        uids = list({"uid":api._uuid(uids[idx]['uid'])} for idx,dic in enumerate(uids) if 'uid' in dic)
         # check if there is None value in uids
         if not any(uids[idx]['uid'] is None for idx,dic in enumerate(uids)):
             logger.info(uids)
@@ -1168,7 +1175,7 @@ class MongoDB(object):
 
         # not necessarily check if ids are corrupted
         # as they are genearted by server
-        exc_ids = list(_uuid(exc_ids[idx]) for idx, dic in enumerate(exc_ids))
+        exc_ids = list(api._uuid(exc_ids[idx]) for idx, dic in enumerate(exc_ids))
 
         res = self.db.requests.find_one(
             {   
@@ -1254,7 +1261,7 @@ class MongoDB(object):
             logger.info(response.text)
 
             # 5xx or 200 + error:Unavailable
-            self.retry_after = _get_retry_after(response.headers)
+            self.retry_after = api._get_retry_after(response.headers)
 
             # Successful response
             if response.status_code == 200:
@@ -1291,7 +1298,7 @@ class MongoDB(object):
     def _remove_doc_ele(self, key, doc, value):
         res = self.db[doc].remove(
             {  
-                key:_id(value)
+                key:api._id(value)
             },
             {
                 "justOne":True
@@ -1335,14 +1342,14 @@ class MongoDB(object):
     def _register_new_request(self, r_id, f_id):
         res = self.db.family.update_one(
             {
-                "_id":_id(f_id)
+                "_id":api._id(f_id)
             },
             {
                 "$push":
                 {
                     "requests":
                     {
-                        "req_id":_id(r_id)
+                        "req_id":api._id(r_id)
                     }
                 }
             })
@@ -1366,7 +1373,7 @@ class MongoDB(object):
     def _register_many_requests(self, req_ids, f_id):
         res = self.db.family.update_many(
             {
-                "_id":_id(f_id)
+                "_id":api._id(f_id)
             },
             {
                 "$push":
@@ -1406,7 +1413,7 @@ class MongoDB(object):
                 {
                     "requests":
                     {
-                        "req_id":_id(r_id)
+                        "req_id":api._id(r_id)
                     }
                 }
             })
@@ -1438,7 +1445,7 @@ class MongoDB(object):
                 {
                     "members":
                     {
-                        "user_id":_id(u_id)
+                        "user_id":api._id(u_id)
                     }
                 }
             })
@@ -1559,7 +1566,7 @@ class MongoDB(object):
         logger.info(nid)
         res = self.db.readableId.insert_one(
             {
-                "uuid":_uuid(uuid),
+                "uuid":api._uuid(uuid),
                 "readable_id":nid
             })
         return nid
@@ -1567,7 +1574,7 @@ class MongoDB(object):
 
     # [START get secure id]
     def __get_secure_id(self, uuid):
-        uuid = _uuid(uuid)
+        uuid = api._uuid(uuid)
 
         if uuid is None:
             return None
@@ -1582,48 +1589,3 @@ class MongoDB(object):
     # [END get secure id]
     # [END private functions]
 
-
-# [START local global functions]
-def _id(id):
-    if not isinstance(id, ObjectId):
-        return ObjectId(id)
-    return id
-
-
-def _uuid(uuid):
-    if not isinstance(uuid, UUID):
-        return api.uuid_to_obj(uuid)
-    return uuid
-
-
-def _from_mongo(data):
-    """
-    Translates the MongoDB dictionary format into the format that's expected
-    by the application.
-    """
-    if not data:
-        return None
-
-    data['id'] = str(data['_id'])
-    logger.info(data)
-    return data
-
-
-def _get_retry_after(response_headers):
-    retry_after = response_headers.get('Retry-After')
-
-    if retry_after:
-        # Parse from seconds (e.g. Retry-After: 120)
-        if type(retry_after) is int:
-            return retry_after
-        # Parse from HTTP-Date (e.g. Retry-After: Fri, 31 Dec 1999 23:59:59 GMT)
-        else:
-            try:
-                from email.utils import parsedate
-                from calendar import timegm
-                return timegm(parsedate(retry_after))
-            except (TypeError, OverflowError, ValueError):
-                return None
-
-    return None
-# [END local global functions]
