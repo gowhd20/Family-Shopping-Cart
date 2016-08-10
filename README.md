@@ -48,7 +48,10 @@ or texting which might be confused later with any general conversation.
 1. 13:17, in model_mongodb.py, writing image files implemented also in relation, 
 new database referring code "mongo_meta.py" was added
 2. 13:17, in model_mongodb.py, some public functions are moved to api.py
-3. 18:10, completed testing on image writing, adding, and updating 
+3. 18:10, completed testing on image writing, adding, and updating
+
+- 10/08/2016
+1. 13:43, in model_mongodb.py, requests_item.py, delete image has implemented and tested 
 
 # Video Demo
 https://youtu.be/5HEmZdVGkuE
