@@ -5,7 +5,7 @@
 
 from .api import api
 
-logger = api.__get_logger("model_mongodb")
+logger = api.__get_logger("mongo_meta")
 
 class MongoMetaData(object):
 
