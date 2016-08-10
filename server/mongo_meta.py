@@ -36,7 +36,8 @@ class MongoMetaData(object):
 	        	"images":api.read_image_file(
 	        		map(lambda x:x['_id'], list(res))),	#	res-> Cursor type
 	        	"status":200,
-	        	"action":"GET"
+	        	"action":"GET",
+	        	"image-count":res.count()
 	        }
 	    else:
 	    	return {

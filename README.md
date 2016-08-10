@@ -53,6 +53,7 @@ new database referring code "mongo_meta.py" was added
 - 10/08/2016
 1. 13:43, in model_mongodb.py, requests_item.py, delete image has implemented and tested 
 2. 19:00, get images by request implemented and the test has completed, applied to the server 
+3. 20:00, rest format and api were modified
 
 # Video Demo
 https://youtu.be/5HEmZdVGkuE

@@ -94,7 +94,51 @@ class RequestsAuth2DataBlock(Resource, MongoDB):
                 "requests":[],
                 "req_count":self.count_requests(arg),
                 "action":"GET",
-                "status":200
+                "status":200,
+                "images":{
+                    "href":"/family/<string:family_name>/requests/<string:req_uuid>/images",
+                    "method":"GET",
+                    "rel":"list"
+                },
+                "links":[
+                {
+                    "href":"/family/<string:uuid>/requests",
+                    "method":"GET",
+                    "rel":"list"
+                },
+                {
+                    "href":"/family/<string:uuid>/requests",
+                    "method":"POST",
+                    "rel":"create",
+                    "required":
+                    {
+                        "item":"<string:item>",
+                        "sender":
+                        {
+                            "uid":"<string:uid>"
+                        },
+                        "receivers":[
+                        {
+                            "uid":"<string:uid>"
+                        }],
+                        "uuid":"<string:uuid>"
+                    }
+                },
+                {
+                    "href":"/family/<string:family_name>/requests",
+                    "method":"PUT",
+                    "rel":"update",
+                    "required":
+                    {
+                        "uuid":"<string:uuid>",
+                        "req_uuid":"<string:req_uuid>"
+                    }
+                },
+                {
+                    "href":"/family/<string:family_name>/requests",
+                    "method":"DELETE",
+                    "rel":"unregister"
+                }]
             }
 
             for req in reqs:
@@ -193,6 +237,17 @@ class RequestImagesDataBlock(Resource, MongoDB):
 
     def get(self, f_name, req_uuid):
         res = self.find_request_images(f_name, req_uuid)
+        res['links'] = [
+        {
+            "href":"/family/"+f_name+"/requests/"+req_uuid+"/images/",
+            "method":"GET",
+            "rel":"list"
+        },
+        {
+            "href":"/family/"+f_name+"/requests/"+req_uuid+"/images/<string:image_name>",
+            "method":"DELETE",
+            "rel":"remove"
+        }]
         return res, res['status']
 
 
@@ -276,7 +331,7 @@ class RequestsIndex(Resource):
             {
                 "href":"/family/<string:uuid>/requests",
                 "method":"GET",
-                "rel":"lists"
+                "rel":"list"
             },
             {
                 "href":"/family/<string:uuid>/requests",
@@ -298,7 +353,7 @@ class RequestsIndex(Resource):
             },
             {
                 "href":"/family/<string:family_name>/requests",
-                "medthod":"PUT",
+                "method":"PUT",
                 "rel":"update",
                 "required":
                 {
