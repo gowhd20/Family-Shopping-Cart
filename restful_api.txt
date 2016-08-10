@@ -70,6 +70,10 @@
     }]
 }
 
+## delete request image		method : DELETE
+/family/<string:family_name>/requests/<string:req_uuid>/images/<string:image_id>
+
+
 ## update request info		method : PUT
 /family/<string:family_name>/requests
 
