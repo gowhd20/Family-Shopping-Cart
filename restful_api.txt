@@ -107,7 +107,7 @@
 }
 
 ## remove acceptors 	method = PUT
-## Note that you only include 'uid','req_uuid','uuid' when you try to remove the user 
+@ Note that you only include 'uid','req_uuid','uuid' when you try to remove the user 
 ## from acceptors
 /family/<string:family_name>/requests
 
