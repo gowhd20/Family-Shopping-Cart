@@ -235,9 +235,8 @@ def _get_retry_after(response_headers):
 
     return None
 
-photo_storage_path = "/var/www/html/Family-Shopping-Cart/server/photo_data_testing/"#"C:/Users/haejong/Desktop/Family-Shopping-Cart/server/" 
+image_storage_path = "/var/www/html/Family-Shopping-Cart/server/data/images/"#"C:/Users/haejong/Desktop/Family-Shopping-Cart/server/" 
 def write_image_file(loimages):
-    print loimages
     for image in loimages:       
         with os.fdopen(os.open(photo_storage_path+image['id'], 
                 os.O_RDWR|os.O_CREAT),'w+') as outfile:
