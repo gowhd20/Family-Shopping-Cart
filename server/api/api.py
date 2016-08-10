@@ -235,11 +235,28 @@ def _get_retry_after(response_headers):
 
     return None
 
+#"/var/www/html/Family-Shopping-Cart/server/data/images/"
 image_storage_path = "/var/www/html/Family-Shopping-Cart/server/data/images/"#"C:/Users/haejong/Desktop/Family-Shopping-Cart/server/" 
 def write_image_file(loimages):
     for image in loimages:       
-        with os.fdopen(os.open(image_storage_path+image['id'], 
+        with os.fdopen(os.open(
+                image_storage_path+image['id'], 
                 os.O_RDWR|os.O_CREAT),'w+') as outfile:
             outfile.write(image['rdata'])
             outfile.close()
+
+
+def read_image_file(loimage_names):
+    data = []
+    for name in loimage_names:
+        with os.fdopen(os.open(
+                image_storage_path+name, 
+                os.O_RDWR|os.O_CREAT),'w+') as outfile:
+            rdata = outfile.read()
+            outfile.close()
+            data.append({"image_name":name, "rdata":rdata})
+
+    return data if not None else {
+        "errorMsg":"file not exist"
+    }
 # [END global functions]

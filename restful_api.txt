@@ -74,6 +74,10 @@
 /family/<string:family_name>/requests/<string:req_uuid>/images/<string:image_id>
 
 
+## get request images		method : GET
+/family/<string:family_name>/requests/<string:req_uuid>/images
+
+
 ## update request info		method : PUT
 /family/<string:family_name>/requests
 

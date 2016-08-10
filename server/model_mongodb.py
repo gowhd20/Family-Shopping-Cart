@@ -158,8 +158,10 @@ class MongoDB(object):
                     receivers = args['receivers'][0]
 
                     if 'images' in opt_data:
-                        loimages = self.meta.store_metadata_images(
-                            f_info['family_name'], opt_data['images'])
+                        loids = self.meta._store_metadata_images(
+                            f_info['family_name'], 
+                            opt_data['images'],
+                            req_uuid)
                      
                     new_r = self.db.requests.insert_one(
                         {
@@ -168,7 +170,7 @@ class MongoDB(object):
                             "owner":f_info['family_name'],
                             "item":args['item'],
                             "sender":args['sender'],
-                            "images":map(lambda x:x['id'], loimages) if 'images' in opt_data else None,     ##  store ids generated above
+                            "images":loids if 'images' in opt_data else None,     ##  store ids generated above
                             "time_of_need":opt_data['time_of_need'] if 'time_of_need' in opt_data else None,
                             "urgency":opt_data['urgency'] if 'urgency' in opt_data else 0,
                             "location":opt_data['location'] if 'location' in opt_data else None,
@@ -181,8 +183,6 @@ class MongoDB(object):
 
                     if new_r.inserted_id != None:
                         self._key_mapper({"secret":new_r.inserted_id, "uuid":req_uuid})
-
-                        api.write_image_file(loimages)
 
                         ## register to family document
                         res = self._register_new_request(new_r.inserted_id, f_id)
@@ -316,13 +316,12 @@ class MongoDB(object):
 
                         #   if images exist in a request, store them also separately 
                         if 'images' in opt_data:
-                            loimages = self.meta.store_metadata_images(
-                                f_info['family_name'], opt_data['images'])
+                            loids = self.meta._store_metadata_images(
+                                f_info['family_name'], 
+                                opt_data['images'],
+                                req['req_uuid'])
 
-                            #   write image file in the server storage (NOTE!, this is not the database storage)
-                            api.write_image_file(loimages)
-
-                            req['images'] = None if not 'images' in opt_data else map(lambda x:x['id'], loimages)
+                            req['images'] = None if not 'images' in opt_data else loids
 
                         req['time_of_need'] = None if not 'time_of_need' in opt_data else opt_data['time_of_need']
                         req['urgency'] = 0 if not 'urgency' in opt_data else opt_data['urgency']
@@ -558,6 +557,35 @@ class MongoDB(object):
     # [END find family cart by uuid]
 
 
+    # [START find images of a request]
+    def find_request_images(self, f_name, req_uuid):
+        if self._check_request_exist(req_uuid) is not None:
+            res = self.meta._retrive_request_images(f_name, req_uuid)#_retrive_request_images(f_name, req_uuid)
+
+            if not 'errorMsg' in res:
+                return res
+
+            else:
+                return {
+                    "action":"GET",
+                    "inner_action":"READ",
+                    "target":"family.requests.images",
+                    "errorMsg":"image not exist or can't read from storage",
+                    "status":400                
+                }
+
+
+        else:
+            return {
+                "action":"GET",
+                "inner_action":"CHECK",
+                "target":"family.requests",
+                "errorMsg":"request not exist",
+                "status":400
+            }
+    # [END find images of a request]
+
+
     # [START find user info]
     def find_user_by_id(self, id):
         return self.db.users.find_one(_id(id))
@@ -643,7 +671,7 @@ class MongoDB(object):
                         req_id)
 
                     ## move the request to the history for further study
-                    self.meta.store_metadata_requests(**r_info)
+                    self.meta._store_metadata_requests(**r_info)
 
                     return res
             else:
@@ -881,12 +909,12 @@ class MongoDB(object):
                         if key in keys_to_update:
                             ## new images are given to update into the server
                             if key == 'images':
-                                loimages = self.meta.store_metadata_images(
-                                    f_info['family_name'], n_data['images'])
+                                loids = self.meta._store_metadata_images(
+                                    f_info['family_name'], 
+                                    n_data['images'],
+                                    args['req_uuid'])
 
-                                #   write image file in the server storage (NOTE!, this is not the database storage)
-                                api.write_image_file(loimages)
-                                data_to_update[key] = map(lambda x:x['id'], loimages)+res[key]
+                                data_to_update[key] = loids+res[key]
                             ## other than new images 
                             else:
                                 data_to_update[key] = n_data[key]
@@ -1079,12 +1107,18 @@ class MongoDB(object):
             }) != None else False
 
 
-    ## check if family name exists
-    def _check_request_exist(self, id):
-        return True if self.db.requests.find_one(
-            {
-                "_id":api._id(id)
-            }) != None else None
+    ## check if request exist by req_uuid
+    def _check_request_exist(self, req_uuid):
+        r_id = self.__get_secure_id(api._uuid(req_uuid))
+
+        if r_id is None:
+            return r_id
+
+        else:
+            return True if self.db.requests.find_one(
+                {
+                    "_id":api._id(r_id)
+                }) != None else None
 
 
     ## user cannot be taken part of more than one family group thus, if user exists,

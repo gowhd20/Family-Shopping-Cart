@@ -178,7 +178,6 @@ class RequestsAuth1DataBlock(Resource, MongoDB):
 
 class RequestImageDataBlock(Resource, MongoDB):
     def __init__(self):
-
         super(RequestImageDataBlock, self).__init__()
 
 
@@ -187,6 +186,14 @@ class RequestImageDataBlock(Resource, MongoDB):
         return res, res['status']
 
 
+class RequestImagesDataBlock(Resource, MongoDB):
+    def __init__(self):
+        super(RequestImagesDataBlock, self).__init__()
+
+
+    def get(self, f_name, req_uuid):
+        res = self.find_request_images(f_name, req_uuid)
+        return res, res['status']
 
 
 class RequestManyAuthDataBlock(Resource, MongoDB):
