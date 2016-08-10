@@ -24,10 +24,16 @@ class MongoMetaData(object):
     		}).count()
 
 
-    def store_metadata_image(self, f_name, raw_images):
+    ## move the about-to-delete item to the history 
+    def store_metadata_requests(self, **req):
+        return self.db.requestHistory.insert_one(req).inserted_id
+
+
+    def store_metadata_images(self, f_name, raw_images):
 		if type(raw_images) is list and not None:
 			a_i_cnt = self.count_all_images()+1
 			f_i_cnt = self.count_family_images(f_name)+1
+
 
 ################################################### Id indexing ####################################################
 ## "family name" - "all image count in db" - "all image count in family" - "count for images registered together" ## 

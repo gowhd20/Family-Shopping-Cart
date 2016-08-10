@@ -158,7 +158,7 @@ class MongoDB(object):
                     receivers = args['receivers'][0]
 
                     if 'images' in opt_data:
-                        loimages = self.meta.store_metadata_image(
+                        loimages = self.meta.store_metadata_images(
                             f_info['family_name'], opt_data['images'])
                      
                     new_r = self.db.requests.insert_one(
@@ -310,14 +310,13 @@ class MongoDB(object):
                     req['owner'] = f_info['family_name']
 
 
-
                     if 'optional_data' in req:
                         opt_data = req['optional_data']
                         req['optional_data'] = None         # this variable not needed anymore
 
                         #   if images exist in a request, store them also separately 
                         if 'images' in opt_data:
-                            loimages = self.meta.store_metadata_image(
+                            loimages = self.meta.store_metadata_images(
                                 f_info['family_name'], opt_data['images'])
 
                             #   write image file in the server storage (NOTE!, this is not the database storage)
@@ -644,7 +643,7 @@ class MongoDB(object):
                         req_id)
 
                     ## move the request to the history for further study
-                    self._move_request_to_history(**r_info)
+                    self.meta.store_metadata_requests(**r_info)
 
                     return res
             else:
@@ -655,6 +654,32 @@ class MongoDB(object):
                     "errorMsg":"given request id does not match with family name"
                 }
     # [END remove request]
+
+    # [START remove image from request]
+    def remove_image(self, f_name, req_uuid, image_id):
+        res = self.find_one_request(f_name, req_uuid)
+
+        #   error returned from finding request
+        if 'errorMsg' in res:
+            res['action'] = "DELETE"
+            res['inner_action'] = "CHECK"
+            return res
+
+        else:
+            res = self._remove_image_from_request(res['_id'], image_id)
+
+            if 'errorMsg' in res:
+                res['action'] = "DELETE"
+                res['inner_action'] = "PUT"
+                return res
+
+            else:
+                return {
+                    "action":"DELETE",
+                    "target":"requests.image",
+                    "status":200,
+                }
+    # [END remove image from request]
 
 
     # [START leave family]
@@ -856,7 +881,7 @@ class MongoDB(object):
                         if key in keys_to_update:
                             ## new images are given to update into the server
                             if key == 'images':
-                                loimages = self.meta.store_metadata_image(
+                                loimages = self.meta.store_metadata_images(
                                     f_info['family_name'], n_data['images'])
 
                                 #   write image file in the server storage (NOTE!, this is not the database storage)
@@ -919,7 +944,31 @@ class MongoDB(object):
             "action":"PUT",
             "status":400,
             "target":"requests.acceptors",
-            "errorMsg":"google_token was not found in acceptors",
+            "errorMsg":"id was not found in acceptors",
+        }
+
+    def _remove_image_from_request(self, req_id, image_id):
+        res = self.db.requests.update_one(
+            {
+                "_id":api._id(req_id)
+            },
+            {
+                 "$pull":
+                {
+                    "images":image_id
+                }               
+            })
+
+        return {
+            "action":"PUT",
+            "status":200,
+            "target":"requests.images",
+
+        } if res.modified_count == 1 and res.matched_count == 1 else {
+            "action":"PUT",
+            "status":400,
+            "target":"requests.images",
+            "errorMsg":"id was not found in images",
         }
 
 
@@ -1010,12 +1059,6 @@ class MongoDB(object):
 
 
     # [START private functions]
-    ## move the about-to-delete item to the history 
-    def _move_request_to_history(self, **req):
-        logger.info(req)
-        return self.db.requestHistory.insert_one(req).inserted_id
-
-
     ## check if family is empty
     def _check_family_has_member(self, id):
         res = self.db.family.find_one(
@@ -1202,7 +1245,7 @@ class MongoDB(object):
                     }
                 }]
             })
-        logger.info(res)
+
         if res is None:
             del res
             res = self.db.requestHistory.find_one(

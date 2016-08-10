@@ -176,9 +176,21 @@ class RequestsAuth1DataBlock(Resource, MongoDB):
         return res, res['status']
 
 
+class RequestImageDataBlock(Resource, MongoDB):
+    def __init__(self):
+
+        super(RequestImageDataBlock, self).__init__()
+
+
+    def delete(self, f_name, req_uuid, image_id):
+        res = self.remove_image(f_name, req_uuid, image_id)
+        return res, res['status']
+
+
+
+
 class RequestManyAuthDataBlock(Resource, MongoDB):
     def __init__(self):
-        ## @TODO, validate nested objects ex) receivers, item
         self.reqparse_post = reqparse.RequestParser(bundle_errors=True)
 
         self.reqparse_post.add_argument('uuid', 

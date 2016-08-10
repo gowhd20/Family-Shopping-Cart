@@ -234,8 +234,8 @@ def _get_retry_after(response_headers):
                 return None
 
     return None
-#"/var/www/html/Family-Shopping-Cart/server/photo_data_testing/"
-photo_storage_path = "C:/Users/haejong/Desktop/Family-Shopping-Cart/server/" 
+
+photo_storage_path = "/var/www/html/Family-Shopping-Cart/server/photo_data_testing/"#"C:/Users/haejong/Desktop/Family-Shopping-Cart/server/" 
 def write_image_file(loimages):
     print loimages
     for image in loimages:       

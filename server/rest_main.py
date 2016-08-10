@@ -12,7 +12,7 @@ from flask_restful import Resource, Api, reqparse
 from flask import Blueprint, Flask, redirect, request, url_for, Response
 
 from .dataBlocks.comments import CommentsDataBlock, CommentsIndex
-from .dataBlocks.requests_item import RequestsAuth2DataBlock, RequestsAuth1DataBlock, RequestsIndex, RequestManyAuthDataBlock
+from .dataBlocks.requests_item import RequestsAuth2DataBlock, RequestsAuth1DataBlock, RequestsIndex, RequestManyAuthDataBlock, RequestImageDataBlock
 from .dataBlocks.family import FamilyDataBlock, FamilyIndex
 from .dataBlocks.base import BaseURIs
 from .dataBlocks.users import UsersAuth2DataBlock, UsersAuth1DataBlock, UsersIndex
@@ -130,6 +130,12 @@ def init_restful():
         endpoint='/family/<family_name>/requests/many')
     # [END RequestManyAuthDataBlock, handled methods : POST]
 
+    # [START RequestImageDataBlock, handled methods : DELETE]
+    api.add_resource(RequestImageDataBlock, 
+        '/family/<string:f_name>/requests/<string:req_uuid>/images/<string:image_id>',
+        methods=['DELETE'], 
+        endpoint='/family/<family_name>/requests/<request_id>/images/<image_id>')
+    # [END RequestImageDataBlock, handled methods : DELETE]
 
     # [START RequestsIndex, handled methods : GET]
     api.add_resource(RequestsIndex,
