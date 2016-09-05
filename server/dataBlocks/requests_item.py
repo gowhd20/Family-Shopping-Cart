@@ -351,26 +351,45 @@ class RequestsIndex(Resource):
             "rel":"index",
             "href":"/family/",
             "template":{
-                "data":{
-                "required":{
-                        "uuid":"<string:uuid>",
-                        "item":"<string:item>",
-                        "sender":
-                        {
-                            "uid":"<string:uid>"
-                        },
-                        "receivers":[
-                        {
-                            "uid":"<string:uid>"
-                        }],
-                    },
-                    "locality_info":
-                    {
+                "data":[
+                {
+                    "name":"uuid",
+                    "prompt":"family id",
+                    "value":"",
+                    "required":True
+                },
+                {
+                    "name":"item",
+                    "prompt":"item name",
+                    "value":"",
+                    "required":True
+                },
+                {
+                    "name":"sender",
+                    "prompt":"sender's info",
+                    "required":True,
+                    "object":{"uid":"<string:uid>"}
+                },
+                {
+                    "name":"receivers",
+                    "prompt":"receivers' info",
+                    "required":True,
+                    "array":["uid", "json"]
+                },
+                {
+                    "name":"locality_info",
+                    "prompt":"locality info",
+                    "required":False,
+                    "object":{
                         "country":"<string:country>",
                         "locality":"<string:city>"
-                    },
-                    "optional_data":            
-                    {
+                    }
+                },
+                {
+                    "name":"optional_data",
+                    "prompt":"optional info of a request",
+                    "required":False,
+                    "object":{
                         "price":"<string:price>",
                         "time_of_need":"<integer:time_of_need>",
                         "description":"<string:description>",
@@ -378,7 +397,7 @@ class RequestsIndex(Resource):
                         "urgency":"<integer:urgency>",
                         "images":"[<string:image_encoded>]"
                     }
-                }
+                }]
             },
             "links":[
             {
