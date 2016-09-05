@@ -17,8 +17,8 @@
 	# locality info is optional
 	"locality_info":
 	{
-		"country":"Finland",
-		"locality":"Oulu"
+		"country":<string:country>,
+		"locality":"<string:city>"
 	},
     # optional_data is optional
     "optional_data":			## update 08/08/2016, modified type "optional_data" list to dict
@@ -28,7 +28,7 @@
 		"description":<string:description>,
 		"location":<string:location>,
 		"urgency":<integer:urgency>,
-		"images":[<string:image>]
+		"images":[<string:image_encoded>]
     }
 }
 

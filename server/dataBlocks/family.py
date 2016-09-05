@@ -152,48 +152,79 @@ class FamilyIndex(Resource, MongoDB):
 
     ## list of families
     def get(self):
-		families = self.find_all_families()
-		resp = {"families":[]}
-
-		for family in families:       
-		    resp["families"].append({
-		        "family_name":family['family_name'],
-		        "requests":
-		        {
-		            "href":"/family/requests",
-		            "method":"GET",
-		            "rel":"index"
-		        },
-		        "members":
-		        {
-		            "users":
-		            {
-		                "href":"/family/"+family['family_name']+"/users",
-		                "method":"GET",
-		                "rel":"list"
-		            }
-		        },
-		        "links":[
-		        {
-		            # family info in detail
-		            "href":"/family/<string:uuid>",
-		            "rel":"self",
-		            "method":"GET"
-		        },
-		        {
-		            "href":"/family/"+family['family_name'],
-		            "rel":"update",
-		            "method":"PUT",
-		            "required":[
-		            {
-		                "uuid":"<string:uuid>",
-		                "user_name":"<string:user_name>",
-		                "mac_addr":"<string:mac_addr>",
-		                "google_token":"<string:google_token>"
-		            }]
-		        }]
-		    })
-		return resp, 200
+        families = self.find_all_families()
+        resp = {
+            "collection":{
+                "items":[],
+                "version":"1.0",
+                "href":"/family",
+                "links":[
+                {
+                    # family info in detail
+                    "href":"/family/<string:uuid>",
+                    "rel":"self",
+                    "method":"GET",
+                    "prompt":"family detail info"
+                },
+                {
+                    "href":"/family/<string:family_name>",
+                    "rel":"update",
+                    "prompt":"update family info",
+                    "method":"PUT"
+                }],
+                "template":{
+                    "data":[
+                    {
+                        "name":"uuid",
+                        "prompt":"id of the family",
+                        "required":True,
+                        "value":""
+                    },
+                    {
+                        "name":"user_name",
+                        "prompt":"name of the user",
+                        "required":True,
+                        "value":""
+                    },
+                    {
+                        "name":"mac_addr",
+                        "prompt":"mac address of the user's mobile",
+                        "required":True,
+                        "value":""
+                    },
+                    {
+                        "name":"google_token",
+                        "prompt":"google token of the user's google account",
+                        "required":True,
+                        "value":""
+                    }]
+                }
+            }
+        }
+        for family in families:       
+		    resp['collection']["items"].append(
+                {
+    		        "family_name":family['family_name'],
+                    "links":[
+                    {
+                        "requests":
+                        {
+                            "href":"/family/requests",
+                            "method":"GET",
+                            "rel":"index"
+                        },
+                        "members":
+                        {
+                            "users":
+                            {
+                                "href":"/family/"+family['family_name']+"/users",
+                                "method":"GET",
+                                "rel":"list"
+                            }
+                        }
+                    }]
+                })
+        return resp, 200
 
 
     ## for creating family
