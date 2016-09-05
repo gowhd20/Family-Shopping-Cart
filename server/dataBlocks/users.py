@@ -60,7 +60,8 @@ class UsersAuth2DataBlock(Resource, MongoDB):
         if 'errorMsg' in res:
             return res, 404
         else:
-            return res, 200
+            res['entity-body'] = res
+            return res, 207
 
 
     def put(self, f_name, uid):
