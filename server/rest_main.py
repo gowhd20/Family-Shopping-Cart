@@ -9,7 +9,7 @@ import os
 
 from exceptions import RequestException
 from flask_restful import Resource, Api, reqparse
-from flask import Blueprint, Flask, redirect, request, url_for, Response
+from flask import Blueprint, Flask, redirect, request, url_for, Response, send_file
 
 from .dataBlocks.comments import CommentsDataBlock, CommentsIndex
 from .dataBlocks.requests_item import RequestsAuth2DataBlock, RequestsAuth1DataBlock, \
@@ -25,6 +25,19 @@ ms = Blueprint('ms', __name__)
 photo_storage_path = "/var/www/html/Family-Shopping-Cart/server/photo_data_testing/"
 
 from model_mongodb import MongoDB
+import boto3
+s3 = boto3.resource('s3', aws_access_key_id='AKIAIQ5ACZE2HCRHBU5A', aws_secret_access_key='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')
+
+class CV(Resource, MongoDB):
+    def get(self):
+    try:        
+#       f = s3.Object(bucket_name='family-shoppingcart-images', key='spot1.jpg')
+#       f = s3.meta.client.upload_file("/var/www/html/CV/hj.pdf", "family-shoppingcart-images", "hj.pdf")
+#       return str(type(f['Body'].read(amt=None)))
+        #return send_file(f['Body'], attachment_filename='hj.pdf')
+            return send_file("/var/www/html/CV/hj.pdf", attachment_filename='hj.pdf')
+    except Exception as e:
+            return str(e)
 
 class DataBlock(Resource, MongoDB):
     def __init__(self):
@@ -151,7 +164,8 @@ def init_restful():
         methods=['GET'],
         endpoint='/family/<family_name>/requests')
     # [END RequestsIndex, handled methods : GET]
-
+    
+    #api.add_resource(CV, '/hj/cv', methods=['GET'], endpoint='/cv')
 
     api.add_resource(DataBlock, '/test/request/photo',methods=['POST', 'GET'],endpoint='/test/request/photo')
 

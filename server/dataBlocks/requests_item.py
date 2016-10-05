@@ -91,79 +91,58 @@ class RequestsAuth2DataBlock(Resource, MongoDB):
             return reqs, 404
         else:
             resp = {
-                "collection":{
-                    "requests":[],
-                    "req_count":self.count_requests(arg),
+                "requests":[],
+                "req_count":self.count_requests(arg),
+                "action":"GET",
+                "status":200,
+                "images":{
+                    "href":"/family/<string:family_name>/requests/<string:req_uuid>/images",
                     "method":"GET",
-                    "rel":"self",
-                    "href":"/family/requests",
-                    "images":{
-                        "href":"/family/<string:family_name>/requests/<string:req_uuid>/images",
-                        "method":"GET",
-                        "rel":"list"
-                    },
-                    ## Lesson learnt: do not make apis in embedded dics-- is error prone from client system 
-                    "template":{
-                        "data":{
-                        "required":{
-                                "uuid":"<string:uuid>",
-                                "item":"<string:item>",
-                                "sender":
-                                {
-                                    "uid":"<string:uid>"
-                                },
-                                "receivers":[
-                                {
-                                    "uid":"<string:uid>"
-                                }],
-                            },
-                            "locality_info":
-                            {
-                                "country":"Finland",
-                                "locality":"Oulu"
-                            },
-                            "optional_data":            
-                            {
-                                "price":"<string:price>",
-                                "time_of_need":"<integer:time_of_need>",
-                                "description":"<string:description>",
-                                "location":"<string:location>",
-                                "urgency":"<integer:urgency>",
-                                "images":"[<string:image_encoded>]"
-                            }
-                        }
-                    },
-                    "links":[
+                    "rel":"list"
+                },
+                "links":[
+                {
+                    "href":"/family/<string:uuid>/requests",
+                    "method":"GET",
+                    "rel":"list"
+                },
+                {
+                    "href":"/family/<string:uuid>/requests",
+                    "method":"POST",
+                    "rel":"create",
+                    "required":
                     {
-                        "href":"/family/<string:uuid>/requests",
-                        "method":"GET",
-                        "rel":"list"
-                    },
-                    {
-                        "href":"/family/<string:uuid>/requests",
-                        "method":"POST",
-                        "rel":"create"
-                    },
-                    {
-                        "href":"/family/<string:family_name>/requests",
-                        "method":"PUT",
-                        "rel":"update",
-                        "required":
+                        "item":"<string:item>",
+                        "sender":
                         {
-                            "uuid":"<string:uuid>",
-                            "req_uuid":"<string:req_uuid>"
-                        }
-                    },
+                            "uid":"<string:uid>"
+                        },
+                        "receivers":[
+                        {
+                            "uid":"<string:uid>"
+                        }],
+                        "uuid":"<string:uuid>"
+                    }
+                },
+                {
+                    "href":"/family/<string:family_name>/requests",
+                    "method":"PUT",
+                    "rel":"update",
+                    "required":
                     {
-                        "href":"/family/<string:family_name>/requests",
-                        "method":"DELETE",
-                        "rel":"unregister"
-                    }]
-                }
+                        "uuid":"<string:uuid>",
+                        "req_uuid":"<string:req_uuid>"
+                    }
+                },
+                {
+                    "href":"/family/<string:family_name>/requests",
+                    "method":"DELETE",
+                    "rel":"unregister"
+                }]
             }
 
             for req in reqs:
-                resp['collection']['requests'].append(
+                resp['requests'].append(
                     {
                         "created_at":None if not 'created_at' in req else req['created_at'],
                         "req_uuid":None if not 'req_uuid' in req else str(req['req_uuid']),
@@ -348,57 +327,6 @@ class RequestsIndex(Resource):
     def get(self):
         return {
             "version":"v1",
-            "rel":"index",
-            "href":"/family/",
-            "template":{
-                "data":[
-                {
-                    "name":"uuid",
-                    "prompt":"family id",
-                    "value":"",
-                    "required":True
-                },
-                {
-                    "name":"item",
-                    "prompt":"item name",
-                    "value":"",
-                    "required":True
-                },
-                {
-                    "name":"sender",
-                    "prompt":"sender's info",
-                    "required":True,
-                    "object":{"uid":"<string:uid>"}
-                },
-                {
-                    "name":"receivers",
-                    "prompt":"receivers' info",
-                    "required":True,
-                    "array":["uid", "json"]
-                },
-                {
-                    "name":"locality_info",
-                    "prompt":"locality info",
-                    "required":False,
-                    "object":{
-                        "country":"<string:country>",
-                        "locality":"<string:city>"
-                    }
-                },
-                {
-                    "name":"optional_data",
-                    "prompt":"optional info of a request",
-                    "required":False,
-                    "object":{
-                        "price":"<string:price>",
-                        "time_of_need":"<integer:time_of_need>",
-                        "description":"<string:description>",
-                        "location":"<string:location>",
-                        "urgency":"<integer:urgency>",
-                        "images":"[<string:image_encoded>]"
-                    }
-                }]
-            },
             "links":[
             {
                 "href":"/family/<string:uuid>/requests",
@@ -408,7 +336,20 @@ class RequestsIndex(Resource):
             {
                 "href":"/family/<string:uuid>/requests",
                 "method":"POST",
-                "rel":"create"
+                "rel":"create",
+                "required":
+                {
+                    "item":"<string:item>",
+                    "sender":
+                    {
+                        "uid":"<string:uid>"
+                    },
+                    "receivers":[
+                    {
+                        "uid":"<string:uid>"
+                    }],
+                    "uuid":"<string:uuid>"
+                }
             },
             {
                 "href":"/family/<string:family_name>/requests",
