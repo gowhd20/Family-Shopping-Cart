@@ -26,7 +26,7 @@ photo_storage_path = "/var/www/html/Family-Shopping-Cart/server/photo_data_testi
 
 from model_mongodb import MongoDB
 import boto3
-s3 = boto3.resource('s3', aws_access_key_id='AKIAIQ5ACZE2HCRHBU5A', aws_secret_access_key='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')
+
 
 class CV(Resource, MongoDB):
     def get(self):
