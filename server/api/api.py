@@ -265,3 +265,12 @@ def read_image_file(loimage_names):
             "errorMsg":"file not exist"
         }
 # [END global functions]
+
+import nltk
+
+class KeywordsHandler(object):
+    def __init__(self):
+        super(KeywordsHandler, self).__init__()
+
+    def tokenizer(self, text):
+        return nltk.word_tokenize(text)

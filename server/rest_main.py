@@ -18,6 +18,7 @@ from .dataBlocks.requests_item import RequestsAuth2DataBlock, RequestsAuth1DataB
 from .dataBlocks.family import FamilyDataBlock, FamilyIndex
 from .dataBlocks.base import BaseURIs
 from .dataBlocks.users import UsersAuth2DataBlock, UsersAuth1DataBlock, UsersIndex
+from .dataBlocks.keywords import KeyWords, KeyWordsAdd
 
 #from flask_restful import Resource, Api, reqparse
 
@@ -25,6 +26,7 @@ ms = Blueprint('ms', __name__)
 photo_storage_path = "/var/www/html/Family-Shopping-Cart/server/photo_data_testing/"
 
 from model_mongodb import MongoDB
+
 import boto3
 s3 = boto3.resource('s3', aws_access_key_id='', aws_secret_access_key='')
 
@@ -165,7 +167,9 @@ def init_restful():
         endpoint='/family/<family_name>/requests')
     # [END RequestsIndex, handled methods : GET]
     
-    #api.add_resource(CV, '/hj/cv', methods=['GET'], endpoint='/cv')
+    api.add_resource(KeyWords, '/test/keywords/<string:text>', methods=['GET'], endpoint='/keywords')
+
+    api.add_resource(KeyWordsAdd, '/test/keywords', methods=['POST'], endpoint='/keywords/new')
 
     api.add_resource(DataBlock, '/test/request/photo',methods=['POST', 'GET'],endpoint='/test/request/photo')
 
