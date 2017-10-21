@@ -20,6 +20,9 @@ from .dataBlocks.base import BaseURIs
 from .dataBlocks.users import UsersAuth2DataBlock, UsersAuth1DataBlock, UsersIndex
 from .dataBlocks.keywords import KeyWords, KeyWordsAdd
 
+
+from .summer2017.summer2017_web_interface import CommunityGraffityInterface
+
 #from flask_restful import Resource, Api, reqparse
 
 ms = Blueprint('ms', __name__)
@@ -30,6 +33,7 @@ from model_mongodb import MongoDB
 import boto3
 s3 = boto3.resource('s3', aws_access_key_id='', aws_secret_access_key='')
 
+
 class CV(Resource, MongoDB):
     def get(self):
     try:        
@@ -37,9 +41,9 @@ class CV(Resource, MongoDB):
 #       f = s3.meta.client.upload_file("/var/www/html/CV/hj.pdf", "family-shoppingcart-images", "hj.pdf")
 #       return str(type(f['Body'].read(amt=None)))
         #return send_file(f['Body'], attachment_filename='hj.pdf')
-            return send_file("/var/www/html/CV/hj.pdf", attachment_filename='hj.pdf')
+        return send_file("/var/www/html/CV/hj.pdf", attachment_filename='hj.pdf')
     except Exception as e:
-            return str(e)
+        return str(e)
 
 class DataBlock(Resource, MongoDB):
     def __init__(self):
