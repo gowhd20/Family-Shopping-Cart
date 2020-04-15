@@ -14,8 +14,15 @@ jobs:
       - run:
           command: ./manage.py test
           name: Test
+      - run:
+          command: echo ${AWS_ACCESS_KEY_ID}
 
 workflows:
   main:
     jobs:
       - build-and-test
+      
+  build-and-test:
+    jobs:
+      - build:
+          context: test-context
